@@ -13,8 +13,8 @@ HumanliQA is a Streamlit application that uses RAG (Retrieval Augmented Generati
 
 1. Clone the repository:
    ```
-   git clone https://github.com/yourusername/humanliqa.git
-   cd humanliqa
+   git clone https://github.com/jaidh01/RAG-chatbot.git
+   cd RAG-chatbot
    ```
 
 2. Install dependencies:
