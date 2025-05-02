@@ -13,28 +13,9 @@ from bs4 import BeautifulSoup
 import json
 import re
 
-from dotenv import load_dotenv
-
-# Load environment variables from .env file for local development
-load_dotenv()
-
-# API key management function
-def get_api_key():
-    """Get API key from various secure sources with appropriate fallbacks"""
-    # Try to get from Streamlit secrets (for Streamlit Cloud deployment)
-    if hasattr(st, "secrets") and "GOOGLE_API_KEY" in st.secrets:
-        return st.secrets["GOOGLE_API_KEY"]
-    
-    # Try to get from environment variables (for Azure or other cloud deployments)
-    elif os.environ.get("GOOGLE_API_KEY"):
-        return os.environ.get("GOOGLE_API_KEY")
-    
-    # If we don't have an API key from secrets or environment, prompt the user
-    elif 'user_api_key' in st.session_state and st.session_state['user_api_key']:
-        return st.session_state['user_api_key']
-    
-    # No API key available
-    return None
+# Set a predefined API key (for production, use environment variables or secrets management)
+# In a real app, you'd use st.secrets["GOOGLE_API_KEY"] instead of hardcoding
+API_KEY = "AIzaSyCCIIlHiIXnTaZQN6a4tz0EZMHpT3yWCqY"  # Replace with your actual API key or use secrets
 
 # Configure the page
 st.set_page_config(page_title="HumanliQA: A Human-Centric Web Q&A Tool", layout="wide")
@@ -91,22 +72,11 @@ def get_text_chunks(text):
     return chunks
 
 def get_vector_store(text_chunks):
-    api_key = get_api_key()
-    if not api_key:
-        st.error("API key not found. Please check your configuration or enter your API key.")
-        return False
-        
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
-    return True
 
 def get_conversational_chain():
-    api_key = get_api_key()
-    if not api_key:
-        st.error("API key not found. Please check your configuration or enter your API key.")
-        return None
-        
     prompt_template = """
     You are Document Genie, a helpful and knowledgeable assistant that provides detailed information based on web content.
     
@@ -124,24 +94,17 @@ def get_conversational_chain():
 
     Answer:
     """
-    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3, google_api_key=api_key)
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-flash", temperature=0.3, google_api_key=API_KEY)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
 
 def user_input(user_question):
     try:
-        api_key = get_api_key()
-        if not api_key:
-            return "API key not found. Please check your configuration or enter your API key."
-            
-        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=API_KEY)
         new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
         docs = new_db.similarity_search(user_question)
         chain = get_conversational_chain()
-        
-        if not chain:
-            return "Error: Could not initialize the AI model. Please check your API key."
         
         response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
         output_text = response["output_text"]
