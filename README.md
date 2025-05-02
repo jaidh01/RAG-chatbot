@@ -1,15 +1,33 @@
-# HumanliQA: A Human-Centric Web Q&A Tool
+# 🧠 RAG Web Content Q&A Tool – Humanli.AI Assignment
 
-HumanliQA is a Streamlit application that uses RAG (Retrieval Augmented Generation) to provide detailed answers to questions based on web content.
+This is my submission for the ML Engineer assignment at **Humanli.AI**. The application uses a Retrieval-Augmented Generation (RAG) architecture to answer questions based only on the content of provided web URLs.
 
-## Features
+## 🔗 Live App
+Access the deployed app here:  
+👉 [https://rag-chatbot.app](https://rag-chatbot-huamnliai.streamlit.app)
 
-- Process content from multiple web URLs
-- Chat interface for natural interaction
-- Powered by Google's Gemini model
-- Vector-based search for relevant information
+---
 
-## Installation
+## 📌 Features
+- 📝 Enter one or more webpage URLs
+- 🔍 Scrape and chunk content
+- 📚 Embed using HuggingFace models
+- 🗂 Store & retrieve with FAISS vector DB
+- 🤖 Generate answers using Gemmini (OpenAI-compatible LLM)
+- 💡 Ask multiple questions after one ingestion (session-based)
+
+---
+
+## 🧱 Tech Stack
+- `LangChain`
+- `FAISS`
+- `HuggingFace Embeddings`
+- `Streamlit`
+- `Gemmini API` (OpenAI-compatible)
+
+---
+
+## 🚀 How to Run Locally
 
 1. Clone the repository:
    ```
@@ -31,6 +49,16 @@ HumanliQA is a Streamlit application that uses RAG (Retrieval Augmented Generati
 Run the Streamlit app:
 ```
 streamlit run chatbot.py
+```
+
+## Repository Structure
+```
+RAG-chatbot/
+├── chatbot.py               # Main Streamlit app
+├── requirements.txt         # All required packages
+├── .streamlit/
+│   └── secrets.toml.example 
+├── README.md                # Explains project
 ```
 
 ## Development
