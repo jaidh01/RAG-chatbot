@@ -46,14 +46,6 @@ if 'conversation_history' not in st.session_state:
 if 'urls_processed' not in st.session_state:
     st.session_state.urls_processed = False
 
-def get_pdf_text(pdf_docs):
-    text = ""
-    for pdf in pdf_docs:
-        pdf_reader = PdfReader(pdf)
-        for page in pdf_reader.pages:
-            text += page.extract_text()
-    return text
-
 def get_web_page_text(urls):
     """Extract text from web URLs"""
     all_text = ""
@@ -107,7 +99,7 @@ def get_conversational_chain():
         return None
         
     prompt_template = """
-    You are Document Genie, a helpful and knowledgeable assistant that provides detailed information based on web content.
+    You are HumanliQA, a helpful and knowledgeable assistant that provides detailed information based on web content.
     
     Answer the question as detailed as possible using only the provided context. If the answer is not in the context, simply say 
     "I don't have enough information about that in the provided sources."
